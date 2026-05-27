@@ -1,0 +1,27 @@
+@import "tailwindcss";
+@plugin "daisyui";
+@import "@heroui/styles";
+
+:root {
+  --noir: #060813;
+  --green: #0c1020;
+  --moss: #8b5cf6;
+  --moss2: #ccff00;
+  --tan: #182235;
+  --bone: #0f172a;
+  --text2: #94a3b8;
+  --text3: #f8fafc;
+}
+
+body {
+  background-color: var(--green);
+  color: var(--text3);
+}
+
+[data-focused="true"] {
+  outline: none !important;
+}
+
+[data-focus-visible="true"] {
+  outline: none !important;
+}
