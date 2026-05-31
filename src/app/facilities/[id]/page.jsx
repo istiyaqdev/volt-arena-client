@@ -16,10 +16,12 @@ const FacilityDetails = async ({ params }) => {
     const token = await auth.api.getToken({
         headers: await headers()
     });
+    const fetchHeaders = {};
+    if (token?.token) {
+        fetchHeaders.authorization = `Bearer ${token.token}`;
+    }
     const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/facility/${id}`, {
-        headers: {
-            authorization: `Bearer ${token.token}`
-        },
+        headers: fetchHeaders,
         cache: 'no-store',
     });
     const facility = await res.json();

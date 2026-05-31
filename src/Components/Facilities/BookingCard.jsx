@@ -5,6 +5,7 @@ import { Select, ListBox, Label } from '@heroui/react';
 import { authClient } from '@/lib/auth-client';
 import { toast } from 'sonner';
 import { FiArrowRight } from 'react-icons/fi';
+import { useRouter } from 'next/navigation';
 
 const BookingCard = ({ facility }) => {
     const { _id, facilityName, price, slots, imageUrl } = facility;
@@ -20,10 +21,16 @@ const BookingCard = ({ facility }) => {
 
     const { data: session } = authClient.useSession();
     const user = session?.user;
+    const router = useRouter();
 
     const total = (price * hours).toFixed(2);
 
     const handleBooking = async () => {
+        if (!user) {
+            toast.error("Please log in to book a facility.");
+            router.push('/login');
+            return;
+        }
 
         if (!date) {
             toast.error("Please select a booking date.");
@@ -83,10 +90,10 @@ const BookingCard = ({ facility }) => {
                     type="date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    min={new Date().toISOString().split('T')[0]}
+                    min={new Date().toLocaleDateString('en-CA')}
                     disabled={booked}
                     required
-                    className="w-full rounded-xl border border-slate-850 bg-slate-950 px-4 py-2.5 text-sm text-slate-300 focus:outline-none focus:border-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed appearance-none"
+                    className="w-full rounded-xl border border-slate-850 bg-slate-950 px-4 py-2.5 text-sm text-slate-350 focus:outline-none focus:border-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 />
             </div>
 
@@ -145,7 +152,7 @@ const BookingCard = ({ facility }) => {
                         : "bg-[#ccff00] hover:bg-[#ccff00]/90 text-black shadow-[0_0_12px_rgba(204,255,0,0.3)] cursor-pointer"
                     }`}
             >
-                {booked ? "Booked" : "Book Now"}
+                {booked ? "Booked" : user ? "Book Now" : "Login to Book"}
                 {!booked && <FiArrowRight className="w-4 h-4" />}
             </button>
         </div>
